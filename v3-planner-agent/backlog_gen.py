@@ -29,24 +29,52 @@ Rules:
     )
     return response["message"]["content"].strip()
 
+# def plan_backlog(state):
+#     """The Planner Agent: Decides what needs to be generated."""
+#     requirement = state["requirement"]
+#     result = ask_llm(
+#         role="Solution Architect",
+#         task="Analyze the requirement and create a 2-step execution plan: 'generate_epic' then 'generate_features'.",
+#         input_text=requirement,
+#         output_format='{"plan": ["generate_epic", "generate_features"]}'
+#     )
+#     # Basic parsing to extract the list; gemma3:1b is usually good with clean JSON strings.
+#     try:
+#         plan_data = json.loads(result)
+#         state["plan"] = plan_data.get("plan", [])
+#     except:
+#         # Fallback if the LLM adds markdown or formatting
+#         state["plan"] = ["generate_epic", "generate_features"]
+    
+#     return state
+
+
 def plan_backlog(state):
-    """The Planner Agent: Decides what needs to be generated."""
+    """The Autonomous Planner: Decides the sequence based on goals, not hints."""
     requirement = state["requirement"]
+    
+    # We describe the 'Tools' available to the agent
+    capabilities = """
+    1. generate_epic: Use this to create a high-level goal and criteria.
+    2. generate_features: Use this to break an existing epic into smaller pieces.
+    """
+
     result = ask_llm(
-        role="Solution Architect",
-        task="Analyze the requirement and create a 2-step execution plan: 'generate_epic' then 'generate_features'.",
+        role="Technical Program Manager",
+        task=f"Given these capabilities: {capabilities}\nCreate a logical execution plan to transform the requirement into a structured backlog.",
         input_text=requirement,
-        output_format='{"plan": ["generate_epic", "generate_features"]}'
+        output_format='{"plan": ["step_1", "step_2"]}'
     )
-    # Basic parsing to extract the list; gemma3:1b is usually good with clean JSON strings.
+    
     try:
         plan_data = json.loads(result)
         state["plan"] = plan_data.get("plan", [])
     except:
-        # Fallback if the LLM adds markdown or formatting
+        # Fallback logic remains essential for local 1b models
         state["plan"] = ["generate_epic", "generate_features"]
     
     return state
+
 
 def generate_epic(state):
     print("\n[Planner executing: generate_epic]")
