@@ -52,7 +52,7 @@ Acceptance Criteria:
 def generate_features(epic):
     return ask_llm(
         role="Product Manager",
-        task="Break the epic into 3 to 5 features. Each feature must have acceptance criteria.",
+        task="Break the epic into 3 features. Each feature must have acceptance criteria.",
         input_text=epic,
         output_format="""
 Features:
@@ -71,52 +71,52 @@ Acceptance Criteria:
 """,
     )
 
-def generate_stories(features):
-    return ask_llm(
-        role="Product Owner",
-        task="Create user stories for the features with acceptance criteria.",
-        input_text=features,
-        output_format="""
-User Stories:
+# def generate_stories(features):
+#     return ask_llm(
+#         role="Product Owner",
+#         task="Create user stories for the features with acceptance criteria.",
+#         input_text=features,
+#         output_format="""
+# User Stories:
 
-Story:
-As a <user>
-I want <goal>
-So that <benefit>
+# Story:
+# As a <user>
+# I want <goal>
+# So that <benefit>
 
-Acceptance Criteria:
-- criterion
-- criterion
+# Acceptance Criteria:
+# - criterion
+# - criterion
 
-Story:
-As a <user>
-I want <goal>
-So that <benefit>
+# Story:
+# As a <user>
+# I want <goal>
+# So that <benefit>
 
-Acceptance Criteria:
-- criterion
-- criterion
-""",
-    )
+# Acceptance Criteria:
+# - criterion
+# - criterion
+# """,
+#     )
 
-def generate_tests(stories):
-    return ask_llm(
-        role="QA Engineer",
-        task="Generate one test case per user story.",
-        input_text=stories,
-        output_format="""
-Test Cases:
+# def generate_tests(stories):
+#     return ask_llm(
+#         role="QA Engineer",
+#         task="Generate one test case per user story.",
+#         input_text=stories,
+#         output_format="""
+# Test Cases:
 
-Test:
-Name: <short name>
-Steps:
-1. step
-2. step
+# Test:
+# Name: <short name>
+# Steps:
+# 1. step
+# 2. step
 
-Expected Result:
-<expected outcome>
-""",
-    )
+# Expected Result:
+# <expected outcome>
+# """,
+#     )
 
 def main():
     if len(sys.argv) < 2:
@@ -139,15 +139,15 @@ def main():
     print("--------")
     print(features)
 
-    stories = generate_stories(features)
-    print("\nUser Stories")
-    print("------------")
-    print(stories)
+    # stories = generate_stories(features)
+    # print("\nUser Stories")
+    # print("------------")
+    # print(stories)
 
-    tests = generate_tests(stories)
-    print("\nTest Cases")
-    print("----------")
-    print(tests)
+    # tests = generate_tests(stories)
+    # print("\nTest Cases")
+    # print("----------")
+    # print(tests)
 
 if __name__ == "__main__":
     main()

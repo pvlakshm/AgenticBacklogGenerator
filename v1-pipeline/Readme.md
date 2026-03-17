@@ -7,22 +7,22 @@ python backlog_gen.py "requirement"
 ## 2. Python as orchestrator
 Pipeline:
 Requirement
-Product Manager --> Epic
-Product Manager --> Features
-Product Owner --> User Stories
-QA Engineer --> Test Cases
+Product Manager -> Epic
+Product Manager -> Features
+<!-- Product Owner -> User Stories -->
+<!-- QA Engineer -> Test Cases -->
 
 ### Controlled here:
 epic = generate_epic(requirement)
 features = generate_features(epic)
-stories = generate_stories(features)
-tests = generate_tests(stories)
+<!-- stories = generate_stories(features)
+tests = generate_tests(stories) -->
 
 ## 3. Role-based pseudo agents
 Roles are explicit in prompts:
 role="Product Manager"
-role="Product Owner"
-role="QA Engineer"
+<!-- role="Product Owner"
+role="QA Engineer" -->
 
 ## 4. Acceptance criteria defined at every level
 Prompts require acceptance criteria. For tests it is implicit via expected result
