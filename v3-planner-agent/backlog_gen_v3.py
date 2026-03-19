@@ -116,7 +116,7 @@ def main():
         "features": generate_features
     }
 
-    print(f"\nProcessing Requirement: {state["requirement"]}")
+    print(f"\nProcessing Requirement: {state['requirement']}")
 
     # 1. Let the Manager decide what to do
     state = run_planner(state)

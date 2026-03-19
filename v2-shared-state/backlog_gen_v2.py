@@ -93,15 +93,15 @@ def main():
         "features": None
     }
 
-    print(f"\nProcessing Requirement: {state["requirement"]}")
+    print(f"\nProcessing Requirement: {state['requirement']}")
 
     # Run the sequence
     state = generate_epic(state)
     state = generate_features(state)
 
     # Final Output
-    print(f"\nEPIC:\n{state["epic"]}")
-    print(f"\nFEATURES:\n{state["features"]}")
+    print(f"\nEPIC:\n{state['epic']}")
+    print(f"\nFEATURES:\n{state['features']}")
 
 if __name__ == "__main__":
     main()
