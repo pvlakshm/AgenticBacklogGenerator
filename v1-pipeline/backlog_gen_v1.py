@@ -28,6 +28,13 @@ Acceptance Criteria:
 - criterion 1
 - criterion 2
 - criterion 3
+
+Feature: <feature name>
+Description: <short description>
+Acceptance Criteria:
+- criterion 1
+- criterion 2
+- criterion 3
 """
     },
 }

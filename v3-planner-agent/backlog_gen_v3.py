@@ -5,6 +5,11 @@ MODEL = "gemma3:1b"
 
 # --- Prompt Templates Configuration ---
 TEMPLATES = {
+    "planner": {
+        "role": "Product Manager",
+        "task": "Analyze the user requirement and determine which backlog artifacts need to be generated. You can choose from: epic, features.",
+        "format": "Plan: <comma-separated list of steps, e.g., epic, features>"
+    },
     "epic": {
         "role": "Product Manager",
         "task": "Create exactly ONE epic from the requirement and define business-level acceptance criteria.",
@@ -77,11 +82,22 @@ def generate_features(state):
     state["features"] = ask_llm("features", state["epic"])
     return state
 
+# --- The Planner ---
+
+def run_planner(state):
+    print("Planning workflow...")
+    plan_raw = ask_llm("planner", state["requirement"])
+
+    # Convert "Plan: epic, features" into ["epic", "features"]
+    steps = [s.strip() for s in plan_raw.replace("Plan:", "").split(",")]
+    state["plan"] = steps
+    return state
+
 # --- Execution ---
 
 def main():
     if len(sys.argv) < 2:
-        print("Usage: python backlog_gen_v2.py 'requirement'")
+        print("Usage: python backlog_gen_v3.py 'requirement'")
         return
 
     requirement = sys.argv[1]
@@ -89,19 +105,32 @@ def main():
     # Initialize the Shared State
     state = {
         "requirement": sys.argv[1],
+        "plan": [],
         "epic": None,
         "features": None
     }
 
+    # Map the strings from the Planner to our functions
+    task_map = {
+        "epic": generate_epic,
+        "features": generate_features
+    }
+
     print(f"\nProcessing Requirement: {state["requirement"]}")
 
-    # Run the sequence
-    state = generate_epic(state)
-    state = generate_features(state)
+    # 1. Let the Manager decide what to do
+    state = run_planner(state)
+    print(f"Confirmed Plan: {state['plan']}")
 
-    # Final Output
-    print(f"\nEPIC:\n{state["epic"]}")
-    print(f"\nFEATURES:\n{state["features"]}")
+    # 2. Execute the plan dynamically
+    for step in state["plan"]:
+        if step in task_map:
+            state = task_map[step](state)
+
+    # 3. Output results
+    for step in state["plan"]:
+        print(f"\n[{step.upper()}]")
+        print(state.get(step, "Not generated"))
 
 if __name__ == "__main__":
     main()
