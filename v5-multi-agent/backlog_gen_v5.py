@@ -191,7 +191,7 @@ class Coordinator:
         state = self._run_planner(state)
         print(f"Confirmed Plan: {state['plan']}")
 
-        # Run agents in planned sequence, each reads/writes shared state
+        # Run agents in planned sequence
         for step in state["plan"]:
             agent = AGENT_MAP[step]()
             state = agent.run(state)
