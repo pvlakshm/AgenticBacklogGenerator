@@ -60,13 +60,12 @@ Acceptance Criteria:
         "role": "Senior Product Manager and Quality Reviewer",
         "task": (
             "Review the FULL backlog (epic + features) holistically against the original requirement. "
-            "If the epic is missing or malformed, respond with exactly: REDO: epic. "
-            "If the epic has fewer than 3 acceptance criteria, respond with exactly: REDO: epic. "
-            "If there are fewer than 3 features, respond with exactly: REDO: features. "
-            "If there are more than 3 features, respond with exactly: REDO: features. "
-            "If any of the features has fewer than 3 acceptance criteria, respond with exactly: REDO: features. "
+            "If the epic is missing or malformed, respond with exactly: REDO: epic. Reason: epic is missing or malformed. "
+            "If the epic has fewer than 3 acceptance criteria, respond with exactly: REDO: epic. Reason: epic has fewer than 3 acceptance criteria. "
+            "If there are fewer than 3 features, respond with exactly: REDO: features. Reason: fewer than 3 features. "
+            "If there are more than 3 features, respond with exactly: REDO: features. Reason: more than 3 features. "
+            "If any of the features has fewer than 3 acceptance criteria, respond with exactly: REDO: features. Reason: feature <feature name> has fewer than 3 acceptance criteria. "
             "Otherwise, respond with exactly: APPROVED. "
-            "Do not explain. Respond with one line only."
         ),
         "format": "REDO: epic  OR  REDO: features OR APPROVED"
     },
@@ -264,7 +263,8 @@ class Coordinator:
             f"EPIC:\n{state['epic']}\n\n"
             f"FEATURES:\n{state['features']}"
         )
-        return ask_llm("global_critic", global_critic_input)
+        response = ask_llm("global_critic", global_critic_input)
+        return response
 
     def _parse_redo(self, verdict):
         """Extract the agent key from a REDO verdict."""
