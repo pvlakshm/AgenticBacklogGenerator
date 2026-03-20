@@ -3,8 +3,6 @@ import ollama
 
 MODEL = "qwen3-coder:480b-cloud"
 
-MAX_REVISIONS = 2
-
 # --- Prompt Templates Configuration ---
 TEMPLATES = {
     "planner": {
@@ -24,6 +22,7 @@ Acceptance Criteria:
 - criterion 3
 """
     },
+
     "features": {
         "role": "Product Manager",
         "task": "Break the epic into 3 features. Each feature must have acceptance criteria.",
@@ -60,8 +59,7 @@ Acceptance Criteria:
     },
 }
 
-
-# --------------------------------------------------------------------------- #
+MAX_REVISIONS = 2
 
 def ask_llm(template_key, input_text):
     config = TEMPLATES[template_key]
@@ -88,8 +86,11 @@ Rules:
         messages=[{"role": "user", "content": prompt}],
         options={"temperature": 0.2},
     )
+
     return response["message"]["content"].strip()
 
+
+# --- Critic Loop Helper ---
 
 def critic_loop(artifact_key, artifact_text, requirement):
     """
@@ -112,6 +113,7 @@ def critic_loop(artifact_key, artifact_text, requirement):
             print(f"  {artifact_key.capitalize()} approved.")
             break
 
+        # Revision needed
         print(f"  Critic feedback: {feedback}")
 
         if attempt < MAX_REVISIONS:
@@ -123,23 +125,26 @@ def critic_loop(artifact_key, artifact_text, requirement):
             )
             current = ask_llm("revise", revise_input)
     else:
-        print(f"\n  Max revisions reached. APPROVING {artifact_key} with feedback.\n")
+        print(f"  \nMax revisions reached. APPROVING {artifact_key} with feedback.\n")
 
     return current
 
 
-# --------------------------------------------------------------------------- #
-# Agents
-# --------------------------------------------------------------------------- #
+# --- Agents ---
 
 class EpicAgent:
     """Responsible for generating and refining a single Epic."""
 
     def run(self, state):
         print("\n[EpicAgent] Starting...")
+        state = self.generate_epic(state)
+        print("[EpicAgent] Done.")
+        return state
+
+    def generate_epic(self, state):
+        print("Generating epic...")
         raw = ask_llm("epic", state["requirement"])
         state["epic"] = critic_loop("epic", raw, state["requirement"])
-        print("[EpicAgent] Done.")
         return state
 
 
@@ -148,9 +153,14 @@ class FeaturesAgent:
 
     def run(self, state):
         print("\n[FeaturesAgent] Starting...")
-        raw = ask_llm("features", state["epic"])
-        state["features"] = critic_loop("features", raw, state["requirement"])
+        state = self.generate_features(state)
         print("[FeaturesAgent] Done.")
+        return state
+
+    def generate_features(self, state):
+        print("Generating features...")
+        raw_features = ask_llm("features", state["epic"])
+        state["features"] = critic_loop("features", raw_features, state["requirement"])
         return state
 
 
@@ -161,15 +171,13 @@ AGENT_MAP = {
 }
 
 
-# --------------------------------------------------------------------------- #
-# Coordinator
-# --------------------------------------------------------------------------- #
+# --- Coordinator ---
 
 class Coordinator:
     """Uses the Planner to decide which agents to run, then orchestrates them."""
 
     def run(self, requirement):
-        # Initialize shared state
+        # Initialize the Shared State
         state = {
             "requirement": requirement,
             "plan": [],
@@ -179,16 +187,16 @@ class Coordinator:
 
         print(f"\nProcessing Requirement: {state['requirement']}")
 
-        # Step 1 — Planner decides which agents are needed
+        # Let the Planner decide the sequence
         state = self._run_planner(state)
         print(f"Confirmed Plan: {state['plan']}")
 
-        # Step 2 — Run agents in planned sequence, each reads/writes shared state
+        # Run agents in planned sequence, each reads/writes shared state
         for step in state["plan"]:
             agent = AGENT_MAP[step]()
             state = agent.run(state)
 
-        # Step 3 — Assemble and print final backlog
+        # Final Output
         print("\n" + "=" * 60)
         for step in state["plan"]:
             print(f"\n[{step.upper()}]")
@@ -212,17 +220,17 @@ class Coordinator:
         return state
 
 
-# --------------------------------------------------------------------------- #
-# Execution
-# --------------------------------------------------------------------------- #
+# --- Execution ---
 
 def main():
     if len(sys.argv) < 2:
         print("Usage: python backlog_gen_v5.py 'requirement'")
         return
 
+    requirement = sys.argv[1]
+
     coordinator = Coordinator()
-    coordinator.run(sys.argv[1])
+    coordinator.run(requirement)
 
 if __name__ == "__main__":
     main()
