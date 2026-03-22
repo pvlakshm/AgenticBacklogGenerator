@@ -41,12 +41,12 @@ pip install pytest pytest-cov
 
 ### Run tests
 ```bash
-pytest test_backlog_gen_v6.py -v
+python -m pytest test_backlog_gen_v6.py -v
 ```
 
 ### Run with coverage
 ```bash
-pytest test_backlog_gen_v6.py --cov=backlog_gen_v6 --cov-report=term-missing
+python -m pytest test_backlog_gen_v6.py --cov=backlog_gen_v6 --cov-report=term-missing
 ```
 
 ### What the tests cover

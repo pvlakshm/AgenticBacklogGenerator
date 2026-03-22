@@ -135,17 +135,17 @@ pip install pytest pytest-cov
 
 ### Run all tests from the repo root
 ```bash
-pytest -v
+python -m pytest -v
 ```
 
 ### Run tests for a specific version
 ```bash
-pytest v4-critic-loop/test_backlog_gen_v4.py -v
+python -m pytest v4-critic-loop/test_backlog_gen_v4.py -v
 ```
 
 ### Run all tests with coverage
 ```bash
-pytest --cov=. --cov-report=term-missing
+python -m pytest --cov=. --cov-report=term-missing
 ```
 
 ### Philosophy
