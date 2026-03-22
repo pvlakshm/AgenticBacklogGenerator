@@ -49,6 +49,18 @@ ollama pull qwen3-coder:480b-cloud
 
 ---
 
+## VS Code Setup
+
+A `.vscode/settings.json` is included that configures pytest as the test runner. Tests are discoverable via the Test Explorer (beaker icon in the sidebar) without any additional configuration.
+
+If tests are not appearing in Test Explorer, open the Command Palette (`Ctrl+Shift+P`) and run:
+```
+Python: Select Interpreter
+```
+Make sure the selected interpreter is the same Python where you installed `pytest` and `ollama`.
+
+---
+
 ## The Six Versions
 
 | Version | Pattern | What's Introduced |
