@@ -24,3 +24,35 @@ As pipelines grow, passing individual strings between functions becomes unmanage
 ```bash
 python backlog_gen_v2.py "Grandma has a car and wants to know when she should refill fuel"
 ```
+
+## Testing
+
+### Install dependencies
+```bash
+pip install pytest pytest-cov
+```
+
+### Run tests
+```bash
+pytest test_backlog_gen_v2.py -v
+```
+
+### Run with coverage
+```bash
+pytest test_backlog_gen_v2.py --cov=backlog_gen_v2 --cov-report=term-missing
+```
+
+### What the tests cover
+- `generate_epic` reads `state["requirement"]` and writes to `state["epic"]`
+- `generate_epic` does not modify `state["requirement"]`
+- `generate_features` reads `state["epic"]` and writes to `state["features"]`
+- `generate_features` does not modify `state["epic"]`
+- Both functions return the updated state dict
+- The epic output in state flows into the features LLM call
+- After the full pipeline, both `state["epic"]` and `state["features"]` are populated
+- The pipeline makes exactly 2 LLM calls
+
+### What the tests do NOT cover
+- LLM output quality — no real LLM calls are made; `ollama` is mocked
+- Prompt effectiveness — use evals for that
+- The `main()` function — CLI argument handling is not unit tested

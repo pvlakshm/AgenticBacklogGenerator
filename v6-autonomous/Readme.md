@@ -31,3 +31,37 @@ In real agentic systems, individual artifact quality is not enough - the outputs
 ```bash
 python backlog_gen_v6.py "Grandma has a car and wants to know when she should refill fuel"
 ```
+
+## Testing
+
+### Install dependencies
+```bash
+pip install pytest pytest-cov
+```
+
+### Run tests
+```bash
+pytest test_backlog_gen_v6.py -v
+```
+
+### Run with coverage
+```bash
+pytest test_backlog_gen_v6.py --cov=backlog_gen_v6 --cov-report=term-missing
+```
+
+### What the tests cover
+- `_parse_redo` returns `"epic"` for `REDO: epic` verdicts
+- `_parse_redo` returns `"features"` for `REDO: features` verdicts
+- `_parse_redo` is case-insensitive
+- `_parse_redo` returns `None` for `APPROVED` and unparseable verdicts
+- `_run_global_critic` includes the requirement, epic, and features in the LLM input
+- `_run_global_critic` uses the `global_critic` template task
+- `_run_global_critic` returns the raw LLM verdict
+- `REDO: epic` causes re-execution of both `EpicAgent` and `FeaturesAgent`
+- `REDO: features` causes re-execution of only `FeaturesAgent`
+- `_run_planner` normalizes step names to lowercase and raises on invalid output
+
+### What the tests do NOT cover
+- LLM output quality — no real LLM calls are made; `ollama` is mocked
+- The global critic loop retry count — `MAX_GLOBAL_RETRIES` enforcement is not unit tested
+- The `main()` function — CLI argument handling is not unit tested

@@ -27,3 +27,38 @@ A bad epic will produce bad features. Quality gating at each step prevents error
 ```bash
 python backlog_gen_v4.py "Grandma has a car and wants to know when she should refill fuel"
 ```
+
+## Testing
+
+### Install dependencies
+```bash
+pip install pytest pytest-cov
+```
+
+### Run tests
+```bash
+pytest test_backlog_gen_v4.py -v
+```
+
+### Run with coverage
+```bash
+pytest test_backlog_gen_v4.py --cov=backlog_gen_v4 --cov-report=term-missing
+```
+
+### What the tests cover
+- `critic_loop` returns the artifact unchanged on immediate approval
+- `critic_loop` makes exactly 1 LLM call when the critic approves immediately
+- `critic_loop` approval detection is case-insensitive
+- `critic_loop` calls the revise template when revision is needed
+- `critic_loop` includes the critic feedback in the revise prompt
+- `critic_loop` returns the revised artifact after a successful revision cycle
+- `critic_loop` returns the last revised artifact when `MAX_REVISIONS` is reached
+- `critic_loop` never exceeds `MAX_REVISIONS` LLM calls
+- `generate_epic` stores the approved artifact in `state["epic"]`
+- `generate_epic` stores the revised artifact when revision was needed
+- `run_planner` correctly parses the plan and raises on invalid output
+
+### What the tests do NOT cover
+- LLM output quality — no real LLM calls are made; `ollama` is mocked
+- Whether the critic's feedback is meaningful — use evals for that
+- The `main()` function — CLI argument handling is not unit tested

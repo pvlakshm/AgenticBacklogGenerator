@@ -29,3 +29,36 @@ As systems grow, functions become hard to manage. Encapsulating generation + qua
 ```bash
 python backlog_gen_v5.py "Grandma has a car and wants to know when she should refill fuel"
 ```
+
+## Testing
+
+### Install dependencies
+```bash
+pip install pytest pytest-cov
+```
+
+### Run tests
+```bash
+pytest test_backlog_gen_v5.py -v
+```
+
+### Run with coverage
+```bash
+pytest test_backlog_gen_v5.py --cov=backlog_gen_v5 --cov-report=term-missing
+```
+
+### What the tests cover
+- `EpicAgent.run` populates `state["epic"]` and returns the updated state
+- `EpicAgent.run` does not modify `state["requirement"]`
+- `EpicAgent` uses the epic template task in the LLM prompt
+- `FeaturesAgent.run` populates `state["features"]` and returns the updated state
+- `FeaturesAgent.run` reads from `state["epic"]` and does not modify it
+- `AGENT_MAP` contains `epic` and `features` keys routing to the correct agent classes
+- `Coordinator._run_planner` parses the plan and writes it to state
+- `Coordinator._run_planner` normalizes step names to lowercase
+- `Coordinator._run_planner` raises `ValueError` when no valid steps are found
+
+### What the tests do NOT cover
+- LLM output quality — no real LLM calls are made; `ollama` is mocked
+- The full `Coordinator.run()` end-to-end flow — individual agents and planner are tested separately
+- The `main()` function — CLI argument handling is not unit tested
