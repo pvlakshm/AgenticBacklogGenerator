@@ -153,7 +153,7 @@ The tests mock `ollama` entirely - no real LLM calls are made. This keeps tests 
 
 > **Mock the LLM. Test the orchestration.**
 
-The tests verify that your agents, planner, critic loop, and coordinator behave correctly regardless of what any LLM says. This is the standard approach used in production agentic systems.
+The tests verify that our agents, planner, critic loop, and coordinator behave correctly regardless of what any LLM says. This is the standard approach used in production agentic systems.
 
 ### Unit tests vs Evals
 Unit tests and evals are complementary but distinct:
@@ -167,7 +167,7 @@ Unit tests and evals are complementary but distinct:
 | What they test | Orchestration logic | LLM output quality |
 | Run frequency | Every commit | Periodically |
 
-The tests in this repo are unit tests. If you want to verify that your prompts actually produce good epics and features from a real LLM, that is an eval - a separate concern covered in a future version.
+The tests in this repo are unit tests. If we want to verify that our prompts actually produce good epics and features from a real LLM, that is an eval - a separate concern covered in a future version.
 
 ### Test complexity mirrors implementation complexity
 Each version's tests cover only the patterns introduced in that version:
