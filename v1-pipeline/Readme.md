@@ -23,3 +23,35 @@ The simplest possible backlog generator. Takes a requirement string, generates a
 ```bash
 python backlog_gen_v1.py "Grandma has a car and wants to know when she should refill fuel"
 ```
+
+## Testing
+
+### Install dependencies
+```bash
+pip install pytest pytest-cov
+```
+
+### Run tests
+```bash
+pytest test_backlog_gen_v1.py -v
+```
+
+### Run with coverage
+```bash
+pytest test_backlog_gen_v1.py --cov=backlog_gen_v1 --cov-report=term-missing
+```
+
+### What the tests cover
+- `ask_llm` calls `ollama.chat` with the configured `MODEL`
+- `ask_llm` includes the template role, task, and input text in the prompt
+- `ask_llm` strips whitespace from the LLM response
+- `ask_llm` raises `KeyError` for an unknown template key
+- `generate_epic` passes the requirement to the LLM and returns the response
+- `generate_features` passes the epic to the LLM and returns the response
+- The pipeline makes exactly 2 LLM calls in the correct order (epic then features)
+- The epic output is passed as input to the features step
+
+### What the tests do NOT cover
+- LLM output quality — no real LLM calls are made; `ollama` is mocked
+- Prompt effectiveness — use evals for that
+- The `main()` function — CLI argument handling is not unit tested
