@@ -59,6 +59,6 @@ python -m pytest test_backlog_gen_v5.py --cov=backlog_gen_v5 --cov-report=term-m
 - `Coordinator._run_planner` raises `ValueError` when no valid steps are found
 
 ### What the tests do NOT cover
-- LLM output quality — no real LLM calls are made; `ollama` is mocked
-- The full `Coordinator.run()` end-to-end flow — individual agents and planner are tested separately
-- The `main()` function — CLI argument handling is not unit tested
+- LLM output quality - no real LLM calls are made; `ollama` is mocked
+- The full `Coordinator.run()` end-to-end flow - individual agents and planner are tested separately
+- The `main()` function - CLI argument handling is not unit tested

@@ -62,6 +62,6 @@ python -m pytest test_backlog_gen_v6.py --cov=backlog_gen_v6 --cov-report=term-m
 - `_run_planner` normalizes step names to lowercase and raises on invalid output
 
 ### What the tests do NOT cover
-- LLM output quality — no real LLM calls are made; `ollama` is mocked
-- The global critic loop retry count — `MAX_GLOBAL_RETRIES` enforcement is not unit tested
-- The `main()` function — CLI argument handling is not unit tested
+- LLM output quality - no real LLM calls are made; `ollama` is mocked
+- The global critic loop retry count - `MAX_GLOBAL_RETRIES` enforcement is not unit tested
+- The `main()` function - CLI argument handling is not unit tested
