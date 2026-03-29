@@ -16,7 +16,7 @@ The simplest possible backlog generator. Takes a requirement string, generates a
 
 ## Limitations
 - No shared state - outputs are passed as raw strings between functions
-- No dynamic planning - the sequence is always epic → features
+- No dynamic planning - the sequence is always epic -> features
 - No quality control - whatever the LLM generates is accepted as-is
 
 ## How to run
@@ -52,6 +52,6 @@ python -m pytest test_backlog_gen_v1.py --cov=backlog_gen_v1 --cov-report=term-m
 - The epic output is passed as input to the features step
 
 ### What the tests do NOT cover
-- LLM output quality — no real LLM calls are made; `ollama` is mocked
-- Prompt effectiveness — use evals for that
-- The `main()` function — CLI argument handling is not unit tested
+- LLM output quality - no real LLM calls are made; `ollama` is mocked
+- Prompt effectiveness - use evals for that
+- The `main()` function - CLI argument handling is not unit tested
