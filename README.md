@@ -1,5 +1,7 @@
 # Agentic Backlog Generator - Stepwise Refinement
 
+![Python](https://img.shields.io/badge/python-3.10+-blue.svg?logo=python) ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)
+
 An agentic AI product backlog generator in six progressive versions. Each version introduces one new pattern, building on the previous, until the system is fully autonomous.
 
 ---
